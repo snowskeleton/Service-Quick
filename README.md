@@ -1,7 +1,7 @@
 # Service-Quick
 Various scripts for making life easier at this back-asswards company.
 
-To use any of these scripts, download the .exe file, unzip it, and double click to run. Windows will pop up a message asking if you really want to run the program. Click the "More Info" link in the top left, then click "Run anyway." You won't be prompted on further launches.
+To use any of these scripts, download the .exe file, unzip it (if necessary), and double click to run. Windows will pop up a message asking if you really want to run the program. Click the "More Info" link in the top left, then click "Run anyway." You won't be prompted on further launches.
 
 
 Eanor.exe is for text replacement (eg., typing "lm" and having it output "called to schedule lmom")
