@@ -1,154 +1,86 @@
 #IfWinNotActive, snow@ziggy
+#SingleInstance Force
 
 !x:: ; closing pages
-if (Haystack != clipboard) {
-	foo := clipboard
-	bar := clipboard
-	}
-Else {
-	clipboard := bar
-	foo := clipboard
+If ThisPageIs("EditWorkOrderAjax") && ThisPageIs("edit=true") { ; submit service order
+	TabTimes(0, 5, "space")
 	}
 
-send ^l
-send ^c
-Haystack := clipboard
-clipboard := foo
-	
-If InStr(Haystack, "EditWorkOrderAjax") && InStr(Haystack, "edit=true") { ; submit service order
-	send {SHIFTDOWN}{TAB}{TAB}{TAB}{TAB}{TAB}{SHIFTUP}{SPACE}
+Else If ThisPageIs("EditCustomerContact.aspx") { ; edit ticket log
+	TabTimes(0, 4, "space")
 	}
 
-Else If InStr(Haystack, "EditCustomerContact.aspx") { ; edit ticket log
-	send {SHIFTDOWN}{TAB}{TAB}{TAB}{TAB}{SHIFTUP}{SPACE}
-	}
-
-Else If InStr(Haystack, "AddCustomerContact") || Instr(Haystack, "customerInfoEdit") || If InStr(Haystack, "EditWorkOrderAjax") || If InStr(Haystack, "productInfoEdit") { ;  save normal ticket log/update contact information/back to ticket from service order/update serial number
-	send {SHIFTDOWN}{TAB}{TAB}{TAB}{SHIFTUP}{SPACE}
+Else If ThisPageIs("AddCustomerContact") || If ThisPageIs("customerInfoEdit") || If ThisPageIs("EditWorkOrderAjax") || If ThisPageIs("productInfoEdit") { ;  save normal ticket log/update contact information/back to ticket from service order/update serial number
+	TabTimes(0, 3, "space")
 	}
 return
 
 !w:: ; opening and editing service orders
-if (Haystack != clipboard) {
-	foo := clipboard
-	bar := clipboard
+If ThisPageIs("TicketNo") { ; open new work order
+	FindButton("New Service Order")
+	TabTimes(1, 1, "space")
 	}
-Else {
-	clipboard := bar
-	foo := clipboard
-	}
-
-send ^l
-send ^c
-Haystack := clipboard
-clipboard := foo
-
-If InStr(Haystack, "TicketNo") { ; open new work order
-	send ^f
-	send ew Ser
-	send {ESC}
-	send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
-	send {SPACE}
-	}
-Else If InStr(Haystack, "AddWorkOrder") { ; create service order
-	send ^f
-	send spec
-	send {ESC}
-	send {TAB}
+Else If ThisPageIs("AddWorkOrder") { ; create service order
+	FindButton("**Only Shows on Tablet**")
+	TabTimes(1)
 	send ^v
 	send ^l
-	send {SHIFTDOWN}{TAB}{TAB}{TAB}{SHIFTUP}{SPACE}
+	TabTimes(0, 3, "space")
 	}
-Else If InStr(Haystack, "EditWorkOrderAjax") { ; editing service orders
-	send {SHIFTDOWN}{TAB}{TAB}{TAB}{TAB}{TAB}{TAB}{SHIFTUP}{SPACE}
+Else If ThisPageIs("EditWorkOrderAjax") { ; editing service orders
+	TabTimes(0, 6, "space")
 	}
 return
 
 !+w::
-send {CTRLDOWN}f{CTRLUP}
-send cre
-send {ESC}
-send {TAB}{SHIFTDOWN}{TAB}{SHIFUP}
-send {SPACE}
+FindButton("create")
+TabTimes(1, 1, "space")
 return
 
 !v:: ; 9-6 scheduling and box checking # service order
-send ^f
-send ment da
-sleep, 20
-send {ESC}
-sleep, 10
-send {TAB}{TAB}{TAB}
+FindButton("Appointment Date")
+TabTimes(3)
 send 9
-send {TAB}
+TabTimes(1)
 send 18
-send ^f
-send Diag
-send {ESC}
-send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
+FindButton("Diagnosis", false)
+TabTimes(1, 1)
 sleep, 600
 send {SPACE}
-send {TAB}
+TabTimes(1)
 sleep, 700
 send {SPACE}
 return
 
 !+v:: ; for box checking
-send ^f
-send Diag
-send {ESC}
-send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
-send {SPACE}
-send {TAB}
-sleep, 600
+FindButton("Diagnosis")
+TabTimes(1, 1, "space")
+TabTimes(1)
+sleep, 700
 send {SPACE}
 return
 
 ^!v:: ; for just 9-6 scheduling, no box checking # service order
-send ^f
-send ment da
-sleep, 20
-send {ESC}
-sleep, 10
-send {TAB}{TAB}{TAB}
+FindButton("Appointment Date")
+TabTimes(3)
 send 9
-send {TAB}
+TabTimes(1)
 send 18
-send {TAB}
+TabTimes(1)
 return
 
 !t:: ; open ticket log/select SMS for ticket log
 If WinActive("KW Office") {
-	send ^f
-	send ept no
-	send {ESC}
-	send {SHIFTDOWN}{TAB}{SHIFTUP}
-	send {SPACE}
+	FindButton("Claim Dept Note")
+	TabTimes(0, 1, "space")
 	}
 Else {
-	if (Haystack != clipboard) {
-		foo := clipboard
-		bar := clipboard
+	If ThisPageIs("TicketNo") { ; open ticket log
+		FindButton("Schedule Follow Up")
+		TabTimes(2,, "space")
 		}
-	Else {
-		clipboard := bar
-		foo := clipboard
-		}
-
-	send ^l
-	send ^c
-	Haystack := clipboard
-	clipboard := foo
-
-	If InStr(Haystack, "TicketNo") { ; open ticket log
-		send ^f
-		send ept no
-		send {ESC}
-		send {SHIFTDOWN}{TAB}{SHIFTUP}
-		send {SPACE}
-		}
-	Else If InStr(Haystack, "AddCustomerContact") { ; select SMS if the ticket log has focus
-		send {TAB}{TAB}{TAB}
+	Else If ThisPageIs("AddCustomerContact") { ; select SMS if the ticket log has focus
+		TabTimes(3)
 		send s
 		}
 }
@@ -162,122 +94,88 @@ clipboard := RegExReplace(clipboard, "&.*$")
 return
 
 !a:: ; click Agent Answered Callfire # main page
-send ^f
-send ent Ans
-send {ESC}
-send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
-send {SPACE}
+FindButton("Agent Answered Call Fire")
+TabTimes(1, 1, "space")
 return
 
 ; !+s:: ; open the Schedule Followup menu (antiquated) # main page
-; send ^f
-; send ule Fol
-; send {ESC}
-; send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
-; send {SPACE}
+; FindButton("Schedule Follow Up")
+; TabTimes(1, 1, "space")
 ; return
 
 !s:: ; Contact Success # ticket log
-send {TAB}{TAB}{TAB}c
-sleep, 400
-send {TAB}{TAB}{TAB}{TAB}s{ESC}
-sleep, 400
-send ^f
-send og m
-send {ESC}{TAB}
+TabTimes(3)
+send c
+sleep, 500
+TabTimes(4)
+send s
+sleep, 500
+FindButton("- LOG MESSAGE -")
+TabTimes(1)
 return
 
 !f:: ; Contact Fail # ticket log
-send {TAB}{TAB}{TAB}c
-sleep, 400
-send {TAB}{TAB}{TAB}{TAB}f{ESC}
-sleep, 400
-send ^f
-send og m
-send {ESC}{TAB}
+TabTimes(3)
+send c
+sleep, 500
+TabTimes(4)
+send f
+sleep, 500
+FindButton("- LOG MESSAGE -")
+TabTimes(1)
 return
 
 !+f:: ; update GSPN status to Contact Fail (works only if the ticket is acknowledged) # Update GSPN Status menu 
-send {TAB}{DOWN}
+TabTimes(1)
+send {DOWN}
 sleep, 1000
-send {TAB}{TAB}{SPACE}{DOWN}{DOWN}{ESC}{TAB}
+TabTimes(2)
+send {DOWN}{DOWN}{ESC}
+TabTimes(1)
 return
 
 !z:: ; open Zone Schedule # main page
-send ^f
-send ule Fol
-send {ESC}
-send {TAB}
-send {SPACE}
+FindButton("Schedule Follow Up")
+TabTimes(1,, "space")
 return
 
 !b:: ; pervious page # zone schedule
 if WinActive("KW Office") {
-	send {TAB}{TAB}{TAB}{SPACE}
+	TabTimes(3,, "space")
 	}
 return
 
 !n:: ; next page # zone schedule
 if WinActive("KW Office") {
-	send {TAB}{TAB}{TAB}{TAB}{TAB}{SPACE}
+	TabTimes(5,, "space")
 	}
 return
 
 !g:: ; sync with GSPN # main page
-send ^f
-send sync gsp
-send {ESC}
-send {TAB}{SHIFTDOWN}{TAB}{SHIFTUP}
-send {SPACE}
+FindButton("Sync with GSPN")
+TabTimes(1, 1, "space")
 return
 
 !e:: ; open email templates (doesn't work) # main page
-send ^f
-send ate sta
-send {ESC}
-send {SHIFTDOWN}{TAB}{TAB}{SHIFTUP}
-send {SPACE}
+FindButton("Generate CX Letter/Email")
+TabTimes(1, 1, "space")
 return
 
 f2:: ; search phone number # url bar
-If WinActive("Ticket Search") {
+If WinActive("Ticket Search") || If WinActive("MAX") {
 	send ^c
 	send ^t
-	x := "https://secure.kwinternational.com/nsp/ticket/search/ticketlist.aspx?mode=C&searchkey="
-	clipboard := RegExReplace(clipboard, "\D")
-	y := clipboard
-	z := x y
-	clipboard := z
-	send ^a
-	send ^v
-	clipboard := y
-	send {RETURN}
-	}
-
-Else If WinActive("Max - Google Chrome") {
-	send ^c
-	send ^t
-	x := "https://secure.kwinternational.com/nsp/ticket/search/ticketlist.aspx?mode=C&searchkey="
-	clipboard := RegExReplace(clipboard, "\D")
-	y := clipboard
-	z := x y
-	clipboard := z
-	send ^a
-	send ^v
-	clipboard := y
-	send {RETURN}
-	}
-
-Else {
-	x := "https://secure.kwinternational.com/nsp/ticket/search/ticketlist.aspx?mode=C&searchkey="
-	clipboard := RegExReplace(clipboard, "\D")
-	y := clipboard
-	z := x y
-	clipboard := z
+	LeaveOnlyNumbers()
 	send ^l
 	send ^a
-	send ^v
-	clipboard := y
+	SwitchNPaste("https://secure.kwinternational.com/nsp/ticket/search/ticketlist.aspx?mode=C&searchkey=", clipboard)
+	send {RETURN}
+	}
+Else {
+	LeaveOnlyNumbers()
+	send ^l
+	send ^a
+	SwitchNPaste("https://secure.kwinternational.com/nsp/ticket/search/ticketlist.aspx?mode=C&searchkey=", clipboard)
 	send {RETURN}
 	}
 return
@@ -304,3 +202,56 @@ ClipWait, 0.05, 1
 return
 
 #IfWinNotActive
+
+
+; Begin Functions
+
+ThisPageIs(page){ ; checks if the current URL contains the paramater.
+	foo := clipboard
+	send ^l
+	send ^c
+	Haystack := clipboard
+	clipboard := foo
+	If InStr(Haystack, page) {
+		return true
+		}
+	Else {
+		return false
+		}
+	}
+
+LeaveOnlyNumbers() { ; uses RegEx to take out all non-number characters from the clipboard. Also makes a backup of the unadulturated clipboard for convenience
+	temp := clipboard
+	clipboard := RegExReplace(clipboard, "\D")
+	}
+
+SwitchNPaste(new_board, y:="") {
+	switch_temp := clipboard
+	clipboard := new_board y
+	send ^v
+	clipboard := switch_temp
+	}
+
+FindButton(button_name, returnq:=true) {
+	send ^f
+	SwitchNPaste(button_name)
+	If returnq {
+		send {RETURN}
+		}
+	send {ESC}
+	}
+
+TabTimes(times_forward, times_backward:=0, space_or_no:=false, forward_again:=0) {
+	Loop %times_forward% {
+		send `t
+		}
+	Loop %times_backward% {
+		send +`t
+		}
+	Loop %forward_again% {
+		send `t
+		}
+	If space_or_no {
+		send {SPACE}
+		}
+	}
