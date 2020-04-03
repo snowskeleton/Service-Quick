@@ -10,7 +10,8 @@ Else If ThisPageIs("EditCustomerContact.aspx") { ; edit ticket log
 	TabTimes(0, 4, "space")
 	}
 
-Else If ThisPageIs("AddCustomerContact") || If ThisPageIs("customerInfoEdit") || If ThisPageIs("EditWorkOrderAjax") || If ThisPageIs("productInfoEdit") { ;  save normal ticket log/update contact information/back to ticket from service order/update serial number
+Else If ThisPageIs("AddCustomerContact") || If ThisPageIs("customerInfoEdit") || If ThisPageIs("EditWorkOrderAjax") || If ThisPageIs("productInfoEdit") ||
+ThisPageIs("workOrderNoteEdit.aspx") { ;  save normal ticket log/update contact information/back to ticket from service order/update serial number/Call Agent Note
 	TabTimes(0, 3, "space")
 	}
 return
